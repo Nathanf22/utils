@@ -8,12 +8,12 @@ similarity_ratio = levenshtein.ratio(str1, str2)
 
 
 saved_strings = [
-    'Hello here!'
-    'this is amazing'
-    'how are you'
-    'I take this'
-    'keep working'
-    'try this also'
+    'Hello here!',
+    'this is amazing',
+    'how are you',
+    'I take this',
+    'keep working',
+    'try this also',
 ]
 
 
@@ -25,20 +25,23 @@ def find_best(search_string, saved_string, nb = 1):
         greater = -1
         index = -1
         for el in saved_string:
-            dist =  levenshtein.distance(search_string, el)
-            if greater < dist:
-                greater = dist
-                index = saved_string.indexof(el)
+            print(f'el: {el}')
+            ratio =  levenshtein.ratio(search_string, el)
+            print(f'dist: {ratio} \n')
+            if greater < ratio:
+                greater = ratio
+                index = saved_string.index(el)
         return index, greater
     else:
-        dist_list = []
+        ratio_list = []
         indexs = []
         for num, el in enumerate(saved_string):
-            dist = levenshtein.distance(search_string, el)
+            ratio = levenshtein.ratio(search_string, el)
             index.append(num)
-            dist_list.append(dist)
-        return indexs, dist_list
+            ratio_list.append(ratio)
+        return indexs, ratio_list
 
-best_index, best_dist = find_best(search_string, saved_strings)
+best_index, best_ratio = find_best(search_string, saved_strings)
+print(f'best index: {best_index}')
  
-print(f'the best match is {saved_strings[best_index]}, and the ratio is {best_dist}')
+print(f'the best match is {saved_strings[best_index]}, and the ratio is {best_ratio}')
