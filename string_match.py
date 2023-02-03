@@ -1,4 +1,5 @@
 import Levenshtein as levenshtein
+import itertools
 
 saved_strings = [
     'Hello here!',
@@ -52,10 +53,24 @@ class SearchUtil:
         return the number of elements present in the iterator
 
     find_best(search_string)
-        return the best corresponding string by calculating Levenshtein ratio.  
+        return the best corresponding index string by calculating Levenshtein ratio.  
+
+    find_best_string(self, search_string)
+        return the best corresponding index string by calculating Levenshtein ratio.
 
     """
     def __init__(self, iterator):
+        """
+        when initializing, convert iterator to list if not.
+
+        Args:
+            iterator (list | tuple | set): an iterator containing the data
+        
+        Raises:
+            TypeError: iterator must be list, tuple or set
+        """
+        if type(iterator) != list and type(iterator) != tuple and type(iterator) != set :
+            raise TypeError("Iterator must be list, tuple or set")
         self.iterator = iterator
         if(type(self.iterator) == list):
             print("this is a list")
@@ -66,9 +81,24 @@ class SearchUtil:
         print(type(self.iterator))
     
     def get_size(self):
+        """
+        get the size of the iterator.
+
+        Returns:
+            int: the number of element in the iterator
+        """
         return len(self.iterator)
 
     def find_best(self, search_string):
+        """
+        find the ratio and index of the best matching
+
+        Args:
+            search_string (string): the string to search in the data
+
+        Returns:
+            tuple: (index, greater) index is the index of the best matching in the iterator, and greater is the ratio coresponding
+        """
         greater = -1
         index = -1
         for el in self.iterator:
@@ -79,6 +109,43 @@ class SearchUtil:
                 greater = ratio
                 index = self.iterator.index(el)
         return index, greater
+
+    def find_best_string(self, search_string):
+        """
+        find the best string in iterator
+
+        Args:
+            search_string (string): the string to search in the data
+
+        Returns:
+            string: the best matching string in the data
+        """
+        index, greater = self.find_best(search_string)
+        return self.iterator[index]
+    
+    def replace_iterator(self, new_iterator):
+        """
+
+        Args:
+            new_iterator (list | tuple | set): iterator to replace the current iterator
+        """
+        self.__init__(new_iterator)
+    
+    def add_to_iterator(self, iterator):
+        """_summary_
+
+        Args:
+            iterator (list | tuple | set): iterator to add to the current iterator
+
+        Raises:
+            TypeError: iterator must be list, tuple or set
+        """
+        if type(iterator) != list and type(iterator) != tuple and type(iterator) != set :
+            raise TypeError("Iterator must be list, tuple or set")
+        else:
+            if type(iterator) != list:
+                iterator = list(iterator)
+            self.iterator = list(itertools.chain(self.iterator, iterator))
         
 searcher = SearchUtil(saved_strings)
 
@@ -89,3 +156,7 @@ print(f'best index: {best_index}')
  
 print(f'the best match is \'{saved_strings[best_index]}\', and the ratio is {best_ratio}')
 
+print(f'adding new values to iterator..')
+searcher.add_to_iterator(['first added', 'how you are', 'something else'])
+print('values added')
+print(f'the new best matching string is : \'{searcher.find_best_string(search_string)}\' ')
