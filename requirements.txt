@@ -1,2 +1,5 @@
 python-Levenshtein
 itertools
+re
+enum
+ast
